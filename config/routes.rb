@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :watch_sessions, only: [:new, :create, :show] do
+  resources :challenges, only: [:new, :create, :show] do
     resources :chats, only: [:create]
   end
 
