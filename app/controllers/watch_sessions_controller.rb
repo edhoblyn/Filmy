@@ -1,4 +1,7 @@
 class WatchSessionsController < ApplicationController
+  def index
+    @watch_sessions = current_user.watch_sessions.order(created_at: :desc)
+  end
   def new
     @session = Session.new
   end
