@@ -1,26 +1,50 @@
-<div class="container mt-4">
-  <h2><%= @watch_session.title %></h2>
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1 class="mb-1"><%= @watch_session.title.presence || "Untitled session" %></h1>
 
-  <hr>
-
-  <div class="mb-4">
-    <% @messages.each do |message| %>
-      <div class="mb-2 <%= message.role == 'assistant' ? 'text-primary' : 'text-dark' %>">
-        <strong><%= message.role.capitalize %>:</strong>
-        <%= message.content %>
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        <% if @watch_session.genre.present? %>
+          <span class="badge text-bg-secondary"><%= @watch_session.genre %></span>
+        <% end %>
+        <% if @watch_session.mood.present? %>
+          <span class="badge text-bg-dark"><%= @watch_session.mood %></span>
+        <% end %>
       </div>
-    <% end %>
-  </div>
-
-  <hr>
-
-  <%= form_with model: [@watch_session, @message] do |f| %>
-    <div class="mb-3">
-      <%= f.text_area :content, class: "form-control", placeholder: "Ask for a movie..." %>
     </div>
 
-    <%= f.submit "Send", class: "btn btn-primary" %>
+    <div class="d-flex gap-2">
+      <%= link_to "Back", watch_sessions_path, class: "btn btn-outline-secondary" %>
+      <%= link_to "Edit", edit_watch_session_path(@watch_session), class: "btn btn-outline-primary" %>
+    </div>
+  </div>
+
+  <% if @watch_session.respond_to?(:description) && @watch_session.description.present? %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5 mb-2">Description</h2>
+        <p class="mb-0"><%= simple_format(@watch_session.description) %></p>
+      </div>
+    </div>
   <% end %>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Chats</h2>
+
+      <% if defined?(@chats) && @chats.present? %>
+        <div class="list-group mb-3">
+          <% @chats.each do |chat| %>
+            <%= link_to chat.title.presence || "Untitled chat", chat_path(chat), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center" %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted mb-3">No chats yet. Start one!</p>
+      <% end %>
+
+      <%= button_to "New chat", watch_session_chats_path(@watch_session), method: :post, class: "btn btn-primary" %>
+    </div>
+  </div>
 </div>
 
 <div class="row">
